@@ -15,6 +15,7 @@ classdef Queue < handle
 
             if obj.queue_size == -1
                 obj.elements = [obj.elements, packet];
+                is_push = true;
             else
 
                 if length(obj.elements) > obj.queue_size
@@ -22,13 +23,22 @@ classdef Queue < handle
                 else
                     obj.elements = [obj.elements, packet];
                     is_push = true;
-                    %To Do : 
-                    % if length(obj.elements) == 1
-                    % obj.elements.StartProcess(datetime())
-                    % To Do : 
-                    % if obj.elements(0).IsFinish()
-                    % obj.elements(0).Pop
+                end
 
+            end
+
+            if length(obj.elements) > 0
+
+                if obj.elements(1).IsFinish(datetime())
+                    obj.Pop();
+                end
+
+            end
+
+            if length(obj.elements) > 0
+
+                if not(obj.elements(1).IsStarted())
+                    obj.elements(1).StartProcess()
                 end
 
             end
@@ -36,7 +46,7 @@ classdef Queue < handle
         end
 
         % pop first element of queue
-        function obj = Pop(obj, packet)
+        function obj = Pop(obj)
 
             if length(obj.elements) > 0
                 obj.elements = obj.elements(2:end);
@@ -45,7 +55,7 @@ classdef Queue < handle
         end
 
         function [is_empty, obj] = IsEmpty(obj)
-            is_empty = length(obj.elements) == 0
+            is_empty = length(obj.elements) == 0;
         end
 
         function [queue_length, obj] = GetLength(obj)

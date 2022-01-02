@@ -15,7 +15,7 @@ classdef Receivers < handle
             if obj.no_receivers > 0
 
                 for i = 1:obj.no_receivers
-                    obj.receivers = [obj.receivers, Queue(obj.receiver_queue_size)]
+                    obj.receivers = [obj.receivers, Queue(obj.receiver_queue_size)];
                 end
 
             end
@@ -27,7 +27,7 @@ classdef Receivers < handle
             if receiver_index > obj.no_receivers
                 is_push = false;
             else
-                is_push = receivers(receiver_index).Push(packet);
+                is_push = obj.receivers(receiver_index).Push(packet);
             end
 
         end

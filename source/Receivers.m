@@ -31,19 +31,24 @@ classdef Receivers < handle
         end
 
         % if all servers are busy return -1
-        function [receiver_index, obj] = GetAvailableIndex(obj)
+        function [available_index, obj] = GetAvailableIndex(obj)
             min_idle = obj.receivers(1).GetIdle();
             index = 1;
             all_busy = true;
 
-            for i = 1:length(obj.k)
+            for i = 1:obj.no_receivers
                 temp = obj.receivers(i).GetIdle();
 
-                if temp < min_idle && ~(obj.receivers(i).IsBusy())
-                    min_idle = temp;
-                    index = i;
-                    all_busy = false;
+                if ~(obj.receivers(i).IsBusy())
+
+                    if (temp <= min_idle)
+                        min_idle = temp;
+                        index = i;
+                        all_busy = false;
+                    end
+
                 end
+
             end
 
             if all_busy

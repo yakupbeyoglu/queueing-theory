@@ -35,8 +35,7 @@ classdef Packet < handle
            if obj.start_time == -1
                obj.start_time = datetime();
            end
-           end
+       end
 
    end
 end
-

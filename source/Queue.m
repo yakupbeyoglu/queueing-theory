@@ -45,6 +45,16 @@ classdef Queue < handle
 
         end
 
+        function [first_element, obj] = GetFirstElement(obj)
+
+            if length(obj.elements) <= 0
+                first_element = -1;
+            else
+                first_element = obj.elements(1);
+            end
+
+        end
+
         % pop first element of queue
         function obj = Pop(obj)
 

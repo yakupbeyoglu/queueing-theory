@@ -1,55 +1,61 @@
-classdef Server < handle
+classdef Controller < handle
 
     properties
-        is_busy = false
-        idle = 0
-        packet = null
+        % k is number of receivers
+        k = 1
 
+        % no_package is number of total packets
+        no_package = 100
+
+        receivers
+        queue
+        storage
     end
 
     methods
         % if size_of_queue == -1, that means no limit for queue it can push inifinity times
-        function obj = Server()
-            obj.is_busy = false;
-            obj.is_finish = false;
-            obj_idle = 0;
+        function obj = Controller(k, no_package)
+            obj.k = k;
+            obj.no_package = no_package;
+            obj.receivers = Receivers(k);
         end
 
-        function [is_push, obj] = PushToServer(obj, packet)
+        function obj = InitializeQueue(obj)
+            obj.queue = Queue(-1);
 
-            if obj.is_busy == false
-                obj.packet = packet
-                is_push = true
-                idle = idle + 1;
-                obj.is_busy = true;
-                return;
-            else
+            for i = 1:obj.no_package
+                obj.queue.Push(Packet(randi([1, 2])));
+            end
 
-                if obj.packet.IsFinish()
-                    idle = idle + 1;
-                    obj.is_busy = true;
-                    obj.packet = packet;
-                    is_push = true;
-                else
-                    is_push = false;
+        end
+
+        function obj = Process(obj)
+            start_time = datetime();
+
+            while obj.queue.GetLength() > 0
+                available = obj.receivers.GetAvailableIndex();
+
+                if ~(available == -1)
+                    first_element = obj.queue.GetFirstElement();
+
+                    if ~(first_element == -1)
+                        is_push = obj.receivers.Push(available, first_element);
+
+                        if is_push
+                            obj.queue.Pop();
+                        end
+
+                    end
+
                 end
 
             end
 
-            function [is_finish, obj] = IsBusy(obj, packet)
-
-                if packet.IsFinish()
-                    obj.is_busy = false;
-                end
-
-                is_finish = obj.is_busy;
-
-            end
-
-            function [idle_no, obj] = GetIdle(obj)
-                return obj.idle;
-            end
-
+            end_time = datetime();
+            disp(start_time);
+            disp(end_time);
         end
 
     end
+
+end

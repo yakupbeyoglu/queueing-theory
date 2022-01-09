@@ -13,7 +13,7 @@ classdef Receivers < handle
             if obj.no_receivers > 0
 
                 for i = 1:obj.no_receivers
-                    obj.receivers = [obj.receivers, Server()];
+                    obj.receivers = [obj.receivers, Server(i)];
                 end
 
             end

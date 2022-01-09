@@ -1,4 +1,4 @@
-classdef Controller < handle
+classdef Simulation < handle
 
     properties
         % k is number of receivers
@@ -17,7 +17,7 @@ classdef Controller < handle
 
     methods
         % if size_of_queue == -1, that means no limit for queue it can push inifinity times
-        function obj = Controller(k, no_package)
+        function obj = Simulation(k, no_package)
             obj.k = k;
             obj.no_package = no_package;
             obj.receivers = Receivers(k);

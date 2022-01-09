@@ -26,26 +26,35 @@ classdef Queue < handle
                 end
 
             end
+
             if length(obj.elements) > 0
-               if obj.elements(1).IsFinish(datetime())
+
+                if obj.elements(1).IsFinish(datetime())
                     obj.Pop();
                 end
+
             end
 
             if length(obj.elements) > 0
+
                 if not(obj.elements(1).IsStarted())
                     obj.elements(1).StartProcess()
                 end
-            end                
+
+            end
+
         end
-        
+
         function [first_element, obj] = GetFirstElement(obj)
+
             if length(obj.elements) <= 0
                 first_element = -1;
             else
                 first_element = obj.elements(1);
             end
+
         end
+
         % pop first element of queue
         function obj = Pop(obj)
 

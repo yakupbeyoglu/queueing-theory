@@ -6,9 +6,10 @@ classdef Server < handle
         idle = 0
         packet
         old_packets = []
-
         %lambda_process = events/process in the queue, default 1/60
         lambda_process = 0.016
+        total_process_time = 0;
+        total_waiting_time = 0;
 
     end
 
@@ -22,12 +23,14 @@ classdef Server < handle
 
         function [is_push, obj] = PushToServer(obj, p_packet)
             poisson_dis = 1 - exp(-1 * obj.lambda_process * obj.idle);
+
             if obj.is_busy == false
+
                 packet = p_packet;
                 packet.duration_time = poisson_dis;
-                obj.packet = packet
-                disp(packet);
-                is_push = true
+                obj.packet = packet;
+                is_push = true;
+                obj.total_process_time = obj.total_process_time + packet.duration_time;
                 obj.idle = obj.idle + 1;
                 obj.is_busy = true;
                 return;
@@ -35,11 +38,15 @@ classdef Server < handle
 
                 if obj.packet.IsFinish(datetime())
                     obj.idle = obj.idle + 1;
+                    p_packet.start_time = datetime();
+                    obj.total_waiting_time = obj.total_waiting_time + seconds(diff(datetime([obj.packet.queue_time; obj.packet.start_time])));
+
                     obj.is_busy = true;
                     packet = p_packet;
                     packet.duration_time = poisson_dis;
                     obj.packet = packet;
                     obj.packet.StartProcess();
+                    obj.total_process_time = obj.total_process_time + packet.duration_time;
                     is_push = true;
                 else
                     is_push = false;

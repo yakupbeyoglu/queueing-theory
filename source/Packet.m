@@ -3,10 +3,6 @@ classdef Packet < handle
     properties
         %start time of process
         start_time = -1
-        %end time of process
-        end_time = -1
-        % expected end time = start_time + duration_time;
-        expected_end_time = -1
         %push time of queue
         queue_time
         %process duration of the packet
